@@ -1,0 +1,136 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+    <title>mNetEqip</title>
+    
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-theme.css" />
+
+    <link rel="stylesheet" href="css/style.css" />
+    
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/genNavBar.js"></script>
+
+    <script>
+$(document).ready(function() {
+    $('.navbar.navbar-fixed-top .navbar-collapse').genNavBar({active: 3});
+    
+    $('#addGroup').on('show.bs.modal', function(event) {
+	var button = $(event.relatedTarget);
+	var modal = $(this);
+
+	modal.find('.modal-title').text(button.data('title'));
+	modal.find('.modal-body #addGroupText').val(button.data('name'));
+	
+	modal.data('type', button.data('type'));
+    });
+    
+    $('#addGroup #addGroupUpdateButton').click(function() {
+	var modal = $('#addGroup');
+	var textValue = modal.find('.modal-body #addGroupText').val()
+	
+	var modalType = modal.data('type');		// тип: 1 - добавление группы, 2 - изменение группы, 3 - добавление элемента в группу, 4 - изменение элемента группы
+	
+	console.log('type=' + modal.data('type'));
+    });
+});
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+            </div>
+        </div>
+    </nav>
+
+<div class="container-fluid"><div class="row">
+      <div class="col-sm-3 col-md-3 sidebar">
+
+<div class="addButtonContainer">
+<a href="#addGroup" role="button" class="btn btn-m-small btn-default" data-toggle="modal" data-title="Создать группу номенклатуры" data-type="1">
+    <span class="glyphicon glyphicon-plus"></span>&nbsp;Добавить группу
+</a>
+</div>
+
+<div class="clear"></div>
+
+
+
+<div class="accordion" id="accordion2">
+
+<div class="accordion-group">
+    <div class="accordion-heading" style="border-bottom: 1px solid #000; padding-bottom: 3px;">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">rgdretg ertrete ertrete retert</a>
+        <div style="float:right;">
+	    <a href="#addGroup" role="button" class="btn btn-m-small btn-default" data-toggle="modal" data-title="Добавить тип номенклатуры" data-type="3"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+	    <a href="#addGroup" role="button" class="btn btn-m-small btn-default" data-toggle="modal" data-name="" data-title="Редактирование группы номенклатуры" data-type="2"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+        </div>
+    </div>
+    <div id="collapseOne" class="accordion-body collapse in" style="border-bottom: 1px solid #000;">
+        <div class="accordion-inner">
+    	    <ul>
+    		<li><a href="#">Item</a></li>
+    		<li><a href="#">Item</a></li>
+    		<li><a href="#">Item</a></li>
+    		<li><a href="#">Item</a></li>
+    		<li><a href="#">Item</a></li>
+    	    </ul>
+        </div>
+    </div>
+</div>
+
+<div class="accordion-group">
+    <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">Collapsible Group Item #2</a>
+    </div>
+    <div id="collapse2" class="accordion-body collapse">
+        <div class="accordion-inner">
+                  Anim pariatur cliche...222
+        </div>
+    </div>
+</div>
+
+</div>
+
+      </div>
+      
+      <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="border: 1px solid #000;">
+        main
+      </div>
+</div></div>
+
+
+<!--//---------------------------------------------------------//-->
+<div id="addGroup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	<h4 class="modal-title">Заголовок формы</h3>
+    </div>
+    <div class="modal-body">
+	<input type="text" id="addGroupText" class="form-control" />
+    </div>
+    <div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Закрыть</button>
+	<button class="btn btn-primary" id="addGroupUpdateButton">Добавить</button>
+    </div>
+</div></div>
+</div>
+
+
+</body>
+</html>
