@@ -51,3 +51,12 @@ body { padding-top: 30px; }
     border: 1px solid transparent;
     border-radius: 4px;
 }
+
+.accordion-heading {
+    border-bottom: 1px solid #000;
+    padding-bottom: 3px;
+}
+
+.accordion-buttons {
+    float: right;
+}
