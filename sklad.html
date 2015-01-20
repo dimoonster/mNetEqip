@@ -30,18 +30,36 @@ $(document).ready(function() {
 	    var modal = $(this);
 
 	    modal.find('.modal-title').text(button.data('title'));
-	    modal.find('.modal-body #addGroupText').val(button.data('name'));
+	    modal.find('.modal-body #addGroupText').val($('#'+button.data('name')).html());
 	
 	    modal.data('type', button.data('type'));
+        modal.data('grpid', button.data('grpid'));
+
+        switch(button.data('type')) {
+            case 2: { modal.find('#addGroupUpdateButton').html('Обновить') }; break;
+            default: { modal.find('#addGroupUpdateButton').html('Добавить') }; break;
+        }
     });
     
     $('#addGroup #addGroupUpdateButton').click(function() {
 	    var modal = $('#addGroup');
-	    var textValue = modal.find('.modal-body #addGroupText').val()
+	    var textValue = modal.find('.modal-body #addGroupText').val();
 	
 	    var modalType = modal.data('type');		// тип: 1 - добавление группы, 2 - изменение группы, 3 - добавление элемента в группу, 4 - изменение элемента группы
-	
-	    console.log('type=' + modal.data('type'));
+
+	    switch(modal.data('type')) {
+            case 1: {
+                $('#testAcc2').mCollapsedMenu('addGroup', { grpName: 'sdfsfd', grpTitle: textValue });
+            }; break;
+            case 2: { // Изменение группы
+                $('#testAcc2').mCollapsedMenu('updateGroup', { grpName: modal.data('grpid'), grpTitle: textValue });
+            }; break;
+            case 3: { // добавление элемента в группу
+                $('#testAcc2').mCollapsedMenu('addItem', { grpName: modal.data('grpid'), itemId: 0, itemTitle: textValue });
+            }; break;
+        }
+
+        modal.modal('hide');
     });
 });
     </script>
@@ -68,7 +86,7 @@ $(document).ready(function() {
 
 <div class="addButtonContainer">
 <a href="#addGroup" role="button" class="btn btn-m-small btn-default" data-toggle="modal" data-title="Создать группу номенклатуры" data-type="1">
-    <span class="glyphicon glyphicon-plus"></span>&nbsp;Добавить группуs
+    <span class="glyphicon glyphicon-plus"></span>&nbsp;Добавить группу
 </a>
 </div>
 
@@ -76,6 +94,7 @@ $(document).ready(function() {
 
 <div class="accordion" id="testAcc2"></div>
 
+<!--
 <div class="accordion" id="accordion2">
 
 <div class="accordion-group">
@@ -99,18 +118,8 @@ $(document).ready(function() {
     </div>
 </div>
 
-<div class="accordion-group">
-    <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">Collapsible Group Item #2</a>
-    </div>
-    <div id="collapse2" class="accordion-body collapse">
-        <div class="accordion-inner">
-                  Anim pariatur cliche...222
-        </div>
-    </div>
 </div>
-
-</div>
+-->
 
       </div>
       

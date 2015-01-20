@@ -20,11 +20,11 @@
 
                 if (options.url == '') return;
 
-                console.log($this.attr("id"));
-
                 $this.mCollapsedMenu('addGroup', {saveStatus:1, grpName:'InitalTestName1', grpTitle:'Inital Test Title'});
                 $this.mCollapsedMenu('addGroup', {saveStatus:1, grpName:'InitalTestName2', grpTitle:'Inital Test Title 2'});
                 $this.mCollapsedMenu('addGroup', {saveStatus:1, grpName:'InitalTestName2', grpTitle:'Inital Test Title 2'});
+
+                $this.mCollapsedMenu('addItem', {saveStatus:1, grpName:'InitalTestName1', itemId:'item1', itemTitle:'Item 1'});
 
                 $.isFunction(options.callback) && options.callback.call($this);
             })
@@ -36,7 +36,7 @@
                 grpName: '',                // имя группы
                 grpTitle: '',               // Текстовый заголовок группы
                 collapsed: true,            // Отоброжать развёрнутим или нет (по умолчанию - нет)
-                saveStatus: 0               // Сохранена ли группы на сервере 0 - нет, 1 - да
+                saveStatus: 0               // Сохранена ли группы на сервере 0 - нет, 1 - да, 2 - требуется обновить значение на сервере
             }, grpData);
 
             return this.each(function () {
@@ -47,7 +47,6 @@
 
                 // Сохраним данные о группе
                 var savedData = $this.data('grpActualData');
-                console.log(typeof savedData);
                 if(typeof savedData === 'undefined') {
                     savedData = [];
                 }
@@ -65,6 +64,7 @@
                 // Сформируем заголовок
                 var grpHead = $('<div class="accordion-heading" />');
                 grpHead.append($('<a/>', {
+                    'id': grpId+'-title',
                     'html': grpData.grpTitle,
                     'class': 'accordion-toggle',
                     'href': '#'+grpId+'-items',
@@ -72,7 +72,6 @@
                     'data-parent': $this.attr("id")
                 }));
 
-                //console.log(grpHead);
                 var grpButtons = $('<div/>', { 'class': 'accordion-buttons' });
                 $('<a/>', {
                     'href': '#addGroup', 'role': 'button', 'class': 'btn btn-m-small btn-default', 'data-toggle': 'modal',
@@ -83,7 +82,8 @@
 
                 $('<a/>', {
                     'href': '#addGroup','role': 'button', 'class': 'btn btn-m-small btn-default', 'data-toggle': 'modal',
-                    'data-title': 'Редактирование группы номенклатуры', 'data-type': 2, 'data-grpid': grpData.grpName
+                    'data-title': 'Редактирование группы номенклатуры', 'data-type': 2, 'data-grpid': grpData.grpName,
+                    'data-name': grpId+'-title'
                 })
                     .appendTo(grpButtons)
                     .append('<span class="glyphicon glyphicon-edit" aria-hidden="true" />');
@@ -113,16 +113,84 @@
             var itemData = $.extend({
                 callback: null,
                 grpName: '',
-                itemTitle: ''
+                itemId: '',
+                itemTitle: '',
+                saveStatus: 0               // Сохранён ли элемент на сервере 0 - нет, 1 - да, 2 - требуется обновить значение на сервере
             }, itemData);
 
             return this.each(function () {
                 var $this = $(this);
-                $this.empty();
+
+                // Сохраним данные о элементе
+                var savedData = $this.data('grpActualData');
+                if(typeof savedData === 'undefined') {
+                    savedData = [];
+                }
+                if(!savedData[itemData.grpName]) {
+                    console.log('mCollapsedMenu.addItem: Группы с именем ['+grpData.grpName+'] не существует');
+                    return;
+                }
+                savedData[itemData.grpName]['items']= {
+                        grpId: itemData.grpName,
+                        itemId: itemData.itemId,
+                        itemTitle: itemData.itemTitle
+                };
+                $this.data('grpActualData', savedData);
+
+
+                var grpId = 'mCollapsedMenu-' + $this.attr("id")+'-grp-'+itemData.grpName;
+
+                var groupElement = $('#'+grpId+'-items div.accordion-inner ul');
+
+                var item = $('<li/>');
+                $('<a/>', {
+                    'href': '#',
+                    'html': itemData.itemTitle,
+                    'data-grpId': itemData.grpName,
+                    'data-itemId': itemData.itemId,
+                    'id': grpId+'-'+itemData.itemId
+                }).appendTo(item);
+
+                groupElement.append(item);
 
                 $.isFunction(itemData.callback) && itemData.callback.call($this);
             })
+        },
+        // ----------------- Обновление группы ----------------
+        updateGroup: function(grpData) {
+            var grpData = $.extend({
+                callback: null,
+                grpName: '',                // имя группы
+                grpTitle: '',               // Текстовый заголовок группы
+                collapsed: true,            // Отоброжать развёрнутим или нет (по умолчанию - нет)
+                saveStatus: 0               // Сохранена ли группы на сервере 0 - нет, 1 - да, 2 - требуется обновить значение на сервере
+            }, grpData);
+
+            return this.each(function () {
+                var $this = $(this);
+
+                // Получим сохранённые данные о группе
+                var savedData = $this.data('grpActualData');
+                if(typeof savedData === 'undefined') {
+                    savedData = [];
+                }
+                if(!savedData[grpData.grpName]) {
+                    console.log('mCollapsedMenu.updateGroup: Группы с именем ['+grpData.grpName+'] не существует');
+                    return;
+                }
+                savedData[grpData.grpName]['title'] = grpData.grpTitle;
+                savedData[grpData.grpName]['saveStatus'] = 2;   // Сделаем пометку, что нужно обновить инфу на сервере
+
+                var grpId = 'mCollapsedMenu-' + $this.attr("id")+'-grp-'+grpData.grpName;
+
+                $('#'+grpId+'-title').html(grpData.grpTitle);
+
+                $this.data('grpActualData', savedData);
+
+                $.isFunction(grpData.callback) && grpData.callback.call($this);
+            });
         }
+
     };
 
     $.fn.mCollapsedMenu = function(method) {

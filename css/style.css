@@ -60,3 +60,11 @@ body { padding-top: 30px; }
 .accordion-buttons {
     float: right;
 }
+
+.accordion-inner ul li {
+    list-style-type: none;
+}
+
+.accordion-inner ul li:before {
+    content: "# ";
+}
