@@ -3,7 +3,7 @@
 $config = new stdClass();
 $config->host = "172.16.1.64";
 $config->user = "mgmt";
-$config->pass = "mgmt123";
+$config->pass = "mgmt";
 $config->name = "mooncontrol";
 $config->type = "pgsql";
 $config->tbl_prefix = "";
